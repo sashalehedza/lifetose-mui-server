@@ -1,6 +1,8 @@
 import PostModal from '../models/post.js'
 import mongoose from 'mongoose'
 
+import asyncHandler from 'express-async-handler'
+
 export const createPost = async (req, res) => {
   const post = req.body
   const newPost = new PostModal({
@@ -26,15 +28,31 @@ export const getPosts = async (req, res) => {
   }
 }
 
-export const getPost = async (req, res) => {
+// export const getPost = async (req, res) => {
+//   const { id } = req.params
+//   try {
+//     const post = await PostModal.findById(id)
+//     res.status(200).json(post)
+//   } catch (error) {
+//     res.status(404).json({ message: 'Something went wrong' })
+//   }
+// }
+
+export const getPost = asyncHandler(async (req, res) => {
   const { id } = req.params
-  try {
-    const post = await PostModal.findById(id)
-    res.status(200).json(post)
-  } catch (error) {
-    res.status(404).json({ message: 'Something went wrong' })
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(404).json({ message: 'Post not found' })
   }
-}
+
+  const post = await PostModal.findById(id)
+
+  if (!post) {
+    res.status(404).json({ message: 'Post not found' })
+  }
+
+  res.status(200).json(post)
+})
 
 export const getPostsByUser = async (req, res) => {
   const { id } = req.params
