@@ -50,8 +50,9 @@ export const getPost = asyncHandler(async (req, res) => {
   if (!post) {
     res.status(404).json({ message: 'Post not found' })
   }
-
-  res.status(200).json(post)
+  if (post) {
+    res.status(200).json(post)
+  }
 })
 
 export const getPostsByUser = async (req, res) => {
