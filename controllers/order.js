@@ -36,12 +36,10 @@ export const getOrders = async (req, res) => {
 
 export const orderPaid = async (req, res) => {
   const { id } = req.params
+  const order = req.body
   try {
-    const order = await OrderModal.findById(id)
-    let { isPaid } = order
-
     const updatedOrder = {
-      isPaid: !isPaid,
+      ...order,
       _id: id,
     }
 
@@ -54,12 +52,11 @@ export const orderPaid = async (req, res) => {
 
 export const orderDelivered = async (req, res) => {
   const { id } = req.params
+  const order = req.body
   try {
-    const order = await OrderModal.findById(id)
-    let { isDelivered } = order
-
     const updatedOrder = {
-      isDelivered: !isDelivered,
+      ...order,
+
       _id: id,
     }
 
