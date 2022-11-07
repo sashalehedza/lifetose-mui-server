@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-
+import UserModal from '../models/user.js'
 const secret = 'test'
 
 const auth = async (req, res, next) => {
@@ -9,6 +9,8 @@ const auth = async (req, res, next) => {
     let decodedData
     if (token && isCustomAuth) {
       decodedData = jwt.verify(token, secret)
+      req.user = await UserModal.findById(decodedData.id).select('-password')
+      console.log(req.user)
       req.userId = decodedData?.id
     }
     next()
@@ -17,4 +19,13 @@ const auth = async (req, res, next) => {
   }
 }
 
-export default auth
+const admin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next()
+  } else {
+    res.status(401)
+    throw new Error('Not authorized as an admin')
+  }
+}
+
+export { auth, admin }

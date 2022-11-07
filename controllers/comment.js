@@ -2,7 +2,6 @@ import CommentModal from '../models/comment.js'
 import CommentReplyModal from '../models/commentreply.js'
 
 import AppError from '../utils/appError.js'
-import mongoose from 'mongoose'
 
 export const getAll = async (req, res) => {
   const { id } = req.params
