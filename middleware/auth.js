@@ -10,7 +10,6 @@ const auth = async (req, res, next) => {
     if (token && isCustomAuth) {
       decodedData = jwt.verify(token, secret)
       req.user = await UserModal.findById(decodedData.id).select('-password')
-      console.log(req.user)
       req.userId = decodedData?.id
     }
     next()
