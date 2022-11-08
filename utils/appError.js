@@ -10,4 +10,6 @@ class AppError extends Error {
   }
 }
 
+// some error testing
+
 export default AppError
