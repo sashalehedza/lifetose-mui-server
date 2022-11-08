@@ -22,13 +22,13 @@ const orderSchema = mongoose.Schema({
   },
   isPaid: {
     type: Boolean,
-    //required: true,
-    //default: false,
+    required: true,
+    default: false,
   },
   isDelivered: {
     type: Boolean,
-    //required: true,
-    // default: false,
+    required: true,
+    default: false,
   },
 })
 
