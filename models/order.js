@@ -3,7 +3,14 @@ import mongoose from 'mongoose'
 const orderSchema = mongoose.Schema({
   user: String,
   orderItems: [],
+
+  shippingMethod: { type: String, required: true },
   shippingPrice: {
+    type: Number,
+    required: true,
+    default: 0.0,
+  },
+  subtotalPrice: {
     type: Number,
     required: true,
     default: 0.0,

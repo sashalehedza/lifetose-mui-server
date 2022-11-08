@@ -3,17 +3,25 @@ import OrderModal from '../models/order.js'
 import mongoose from 'mongoose'
 
 export const createOrder = async (req, res) => {
-  const { orderItems, shippingPrice, totalPrice } = req.body
+  const {
+    orderItems,
+    shippingMethod,
+    shippingPrice,
+    totalPrice,
+    subtotalPrice,
+  } = req.body
 
-  const newPost = new OrderModal({
+  const newOrder = new OrderModal({
     user: req.userId,
     orderItems: orderItems,
+    shippingMethod: shippingMethod,
     shippingPrice: shippingPrice,
+    subtotalPrice: subtotalPrice,
     totalPrice: totalPrice,
   })
 
-  newPost.save()
-  res.status(201).json(newPost)
+  newOrder.save()
+  res.status(201).json(newOrder)
 }
 
 export const getAllOrders = async (req, res) => {
