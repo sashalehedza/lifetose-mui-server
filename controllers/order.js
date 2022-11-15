@@ -9,6 +9,7 @@ export const createOrder = async (req, res) => {
     shippingPrice,
     totalPrice,
     subtotalPrice,
+    name,
   } = req.body
 
   const newOrder = new OrderModal({
@@ -18,6 +19,7 @@ export const createOrder = async (req, res) => {
     shippingPrice: shippingPrice,
     subtotalPrice: subtotalPrice,
     totalPrice: totalPrice,
+    name: name,
   })
 
   newOrder.save()

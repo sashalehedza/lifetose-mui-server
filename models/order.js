@@ -1,9 +1,15 @@
 import mongoose from 'mongoose'
 
 const orderSchema = mongoose.Schema({
-  user: String,
+  user: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
   orderItems: [],
-
   shippingMethod: { type: String, required: true },
   shippingPrice: {
     type: Number,
