@@ -16,6 +16,7 @@ const postSchema = mongoose.Schema({
     type: [String],
     default: [],
   },
+  discount: Number,
 })
 
 const PostModal = mongoose.model('Post', postSchema)
