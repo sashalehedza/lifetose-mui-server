@@ -2,10 +2,22 @@ import express from 'express'
 const router = express.Router()
 import { auth, admin } from '../middleware/auth.js'
 
-import { createCoupon, getAllCoupons } from '../controllers/coupon.js'
+import {
+  createCoupon,
+  deleteCoupon,
+  updateCoupon,
+  getAllCoupons,
+  getCoupon,
+} from '../controllers/coupon.js'
 
 router.post('/create', auth, admin, createCoupon)
 
-router.get('/', getAllCoupons)
+router.delete('/:id', auth, admin, deleteCoupon)
+
+router.patch('/:id', auth, admin, updateCoupon)
+
+router.get('/', auth, admin, getAllCoupons)
+
+router.get('/:id', auth, admin, getCoupon)
 
 export default router

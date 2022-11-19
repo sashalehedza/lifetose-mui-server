@@ -1,4 +1,44 @@
 import CouponModal from '../models/coupon.js'
+import mongoose from 'mongoose'
+
+export const getAllCoupons = async (req, res) => {
+  try {
+    const coupons = await CouponModal.find()
+    res.status(200).json(coupons)
+  } catch (error) {
+    res.status(404).json({ message: 'Something went wrong' })
+  }
+}
+
+export const getCoupon = async (req, res) => {
+  const { id } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(404).json({ message: 'Coupon not found' })
+  }
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    const post = await CouponModal.findById(id)
+    if (!post) {
+      res.status(404).json({ message: 'Coupon not found' })
+    }
+    if (post) {
+      res.status(200).json(post)
+    }
+  }
+}
+
+export const deleteCoupon = async (req, res) => {
+  const { id } = req.params
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: `No coupon exist with id: ${id}` })
+    }
+    await CouponModal.findByIdAndRemove(id)
+    res.json({ message: 'Coupon deleted successfully' })
+  } catch (error) {
+    res.status(404).json({ message: 'Something went wrong' })
+  }
+}
 
 export const createCoupon = async (req, res) => {
   const { name, percent } = req.body
@@ -13,10 +53,23 @@ export const createCoupon = async (req, res) => {
   res.status(201).json(newCoupon)
 }
 
-export const getAllCoupons = async (req, res) => {
+export const updateCoupon = async (req, res) => {
+  const { id } = req.params
+
+  const coupon = req.body
+
   try {
-    const coupons = await CouponModal.find()
-    res.status(200).json(coupons)
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: `No coupon exist with id: ${id}` })
+    }
+
+    const updatedCoupon = {
+      ...coupon,
+      _id: id,
+    }
+
+    await CouponModal.findByIdAndUpdate(id, updatedCoupon, { new: true })
+    res.json(updatedCoupon)
   } catch (error) {
     res.status(404).json({ message: 'Something went wrong' })
   }

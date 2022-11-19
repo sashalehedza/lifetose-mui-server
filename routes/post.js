@@ -22,8 +22,8 @@ router.get('/', getPosts)
 router.get('/:id', getPost)
 
 router.post('/', auth, admin, createPost)
-router.delete('/:id', auth, deletePost)
-router.patch('/:id', auth, updatePost)
+router.delete('/:id', auth, admin, deletePost)
+router.patch('/:id', auth, admin, updatePost)
 router.get('/userPosts/:id', auth, admin, getPostsByUser)
 router.patch('/like/:id', auth, likePost)
 
