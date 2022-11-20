@@ -17,6 +17,8 @@ const postSchema = mongoose.Schema({
     default: [],
   },
   discount: Number,
+  saleCount: Number,
+  saleDiscount: Number,
 })
 
 const PostModal = mongoose.model('Post', postSchema)
