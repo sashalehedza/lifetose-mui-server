@@ -16,7 +16,7 @@ router.delete('/:id', auth, admin, deleteCoupon)
 
 router.patch('/:id', auth, admin, updateCoupon)
 
-router.get('/', auth, admin, getAllCoupons)
+router.get('/', getAllCoupons)
 
 router.get('/:id', auth, admin, getCoupon)
 
