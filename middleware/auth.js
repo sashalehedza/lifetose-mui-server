@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import UserModal from '../models/user.js'
+
 const secret = 'test'
 
 const auth = async (req, res, next) => {

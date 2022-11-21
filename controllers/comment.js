@@ -1,8 +1,6 @@
 import CommentModal from '../models/comment.js'
 import CommentReplyModal from '../models/commentreply.js'
 
-import AppError from '../utils/appError.js'
-
 export const getAll = async (req, res) => {
   const { id } = req.params
   const comments = await CommentModal.find({ isRoot: true, postId: id })
@@ -32,12 +30,9 @@ export const createComment = async (req, res) => {
 export const updateComment = async (req, res) => {
   const comment = await CommentModal.findById(req.params.commentId)
   if (comment.commentedBy.toString() !== req.userId) {
-    return next(
-      new AppError(
-        'Comment can only be updated by the user who created it',
-        400
-      )
-    )
+    return res
+      .status(400)
+      .json('Comment can only be updated by the user who created it')
   }
   let updatedComment = await CommentModal.findByIdAndUpdate(
     { _id: req.params.commentId },
@@ -49,6 +44,20 @@ export const updateComment = async (req, res) => {
     select: ['name'],
   })
   res.json(updatedComment)
+}
+
+export const getAllReply = async (req, res) => {
+  const commentId = req.params.commentId
+  const replies = await CommentReplyModal.find({ comment: commentId }).populate(
+    {
+      path: 'replyComment',
+      populate: {
+        path: 'commentedBy',
+        select: ['name'],
+      },
+    }
+  )
+  res.json(replies)
 }
 
 export const reply = async (req, res) => {
@@ -69,18 +78,4 @@ export const reply = async (req, res) => {
     },
   })
   res.status(201).json(commentReply)
-}
-
-export const getAllReply = async (req, res) => {
-  const commentId = req.params.commentId
-  const replies = await CommentReplyModal.find({ comment: commentId }).populate(
-    {
-      path: 'replyComment',
-      populate: {
-        path: 'commentedBy',
-        select: ['name'],
-      },
-    }
-  )
-  res.json(replies)
 }

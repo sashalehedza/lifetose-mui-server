@@ -1,5 +1,5 @@
-import CouponModal from '../models/coupon.js'
 import mongoose from 'mongoose'
+import CouponModal from '../models/coupon.js'
 
 export const getAllCoupons = async (req, res) => {
   try {
@@ -27,19 +27,6 @@ export const getCoupon = async (req, res) => {
   }
 }
 
-export const deleteCoupon = async (req, res) => {
-  const { id } = req.params
-  try {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: `No coupon exist with id: ${id}` })
-    }
-    await CouponModal.findByIdAndRemove(id)
-    res.json({ message: 'Coupon deleted successfully' })
-  } catch (error) {
-    res.status(404).json({ message: 'Something went wrong' })
-  }
-}
-
 export const createCoupon = async (req, res) => {
   const { name, percent } = req.body
 
@@ -51,6 +38,19 @@ export const createCoupon = async (req, res) => {
 
   newCoupon.save()
   res.status(201).json(newCoupon)
+}
+
+export const deleteCoupon = async (req, res) => {
+  const { id } = req.params
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: `No coupon exist with id: ${id}` })
+    }
+    await CouponModal.findByIdAndRemove(id)
+    res.json({ message: 'Coupon deleted successfully' })
+  } catch (error) {
+    res.status(404).json({ message: 'Something went wrong' })
+  }
 }
 
 export const updateCoupon = async (req, res) => {

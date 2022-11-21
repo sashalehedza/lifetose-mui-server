@@ -1,7 +1,31 @@
-import PostModal from '../models/post.js'
 import mongoose from 'mongoose'
+import PostModal from '../models/post.js'
 
-import asyncHandler from 'express-async-handler'
+export const getPosts = async (req, res) => {
+  try {
+    const posts = await PostModal.find()
+    res.status(200).json(posts)
+  } catch (error) {
+    res.status(404).json({ message: 'Something went wrong' })
+  }
+}
+
+export const getPost = async (req, res) => {
+  const { id } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(404).json({ message: 'Post not found' })
+  }
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    const post = await PostModal.findById(id)
+    if (!post) {
+      res.status(404).json({ message: 'Post not found' })
+    }
+    if (post) {
+      res.status(200).json(post)
+    }
+  }
+}
 
 export const createPost = async (req, res) => {
   const post = req.body
@@ -17,58 +41,6 @@ export const createPost = async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: 'Something went wrong' })
   }
-}
-
-export const getPosts = async (req, res) => {
-  try {
-    const posts = await PostModal.find()
-    res.status(200).json(posts)
-  } catch (error) {
-    res.status(404).json({ message: 'Something went wrong' })
-  }
-}
-
-// export const getPost = async (req, res) => {
-//   const { id } = req.params
-
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     res.status(404).json({ message: 'Post not found' })
-//   }
-//   if (mongoose.Types.ObjectId.isValid(id)) {
-//     const post = await PostModal.findById(id)
-//     if (!post) {
-//       res.status(404).json({ message: 'Post not found' })
-//     }
-//     if (post) {
-//       res.status(200).json(post)
-//     }
-//   }
-// }
-
-export const getPost = asyncHandler(async (req, res) => {
-  const { id } = req.params
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    res.status(404).json({ message: 'Post not found' })
-  }
-  if (mongoose.Types.ObjectId.isValid(id)) {
-    const post = await PostModal.findById(id)
-    if (!post) {
-      res.status(404).json({ message: 'Post not found' })
-    }
-    if (post) {
-      res.status(200).json(post)
-    }
-  }
-})
-
-export const getPostsByUser = async (req, res) => {
-  const { id } = req.params
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ message: "User doesn't exist" })
-  }
-  const userPosts = await PostModal.find({ creator: id })
-  res.status(200).json(userPosts)
 }
 
 export const deletePost = async (req, res) => {
@@ -87,7 +59,6 @@ export const deletePost = async (req, res) => {
 export const updatePost = async (req, res) => {
   const { id } = req.params
 
-  // const { title, description, creator, imageFile, tags, likes } = req.body
   const post = req.body
 
   try {
@@ -95,15 +66,6 @@ export const updatePost = async (req, res) => {
       return res.status(404).json({ message: `No post exist with id: ${id}` })
     }
 
-    // const updatedPost = {
-    //   creator,
-    //   title,
-    //   description,
-    //   tags,
-    //   imageFile,
-    //   likes,
-    //   _id: id,
-    // }
     const updatedPost = {
       ...post,
       _id: id,
@@ -114,6 +76,15 @@ export const updatePost = async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: 'Something went wrong' })
   }
+}
+
+export const getPostsByUser = async (req, res) => {
+  const { id } = req.params
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ message: "User doesn't exist" })
+  }
+  const userPosts = await PostModal.find({ creator: id })
+  res.status(200).json(userPosts)
 }
 
 export const getPostsBySearch = async (req, res) => {

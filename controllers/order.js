@@ -1,6 +1,23 @@
-import asyncHandler from 'express-async-handler'
-import OrderModal from '../models/order.js'
 import mongoose from 'mongoose'
+import OrderModal from '../models/order.js'
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await OrderModal.find()
+    res.status(200).json(orders)
+  } catch (error) {
+    res.status(404).json({ message: 'Something went wrong' })
+  }
+}
+
+export const getMyOrders = async (req, res) => {
+  try {
+    const orders = await OrderModal.find({ user: req.userId })
+    res.status(200).json(orders)
+  } catch (error) {
+    res.status(404).json({ message: 'Something went wrong' })
+  }
+}
 
 export const createOrder = async (req, res) => {
   const {
@@ -24,24 +41,6 @@ export const createOrder = async (req, res) => {
 
   newOrder.save()
   res.status(201).json(newOrder)
-}
-
-export const getAllOrders = async (req, res) => {
-  try {
-    const orders = await OrderModal.find()
-    res.status(200).json(orders)
-  } catch (error) {
-    res.status(404).json({ message: 'Something went wrong' })
-  }
-}
-
-export const getOrders = async (req, res) => {
-  try {
-    const orders = await OrderModal.find({ user: req.userId })
-    res.status(200).json(orders)
-  } catch (error) {
-    res.status(404).json({ message: 'Something went wrong' })
-  }
 }
 
 export const orderPaid = async (req, res) => {
