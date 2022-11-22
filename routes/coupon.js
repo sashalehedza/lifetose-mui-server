@@ -8,13 +8,16 @@ import {
   createCoupon,
   deleteCoupon,
   updateCoupon,
+  getCouponByName,
 } from '../controllers/coupon.js'
 
-router.get('/', getAllCoupons)
+router.get('/', auth, admin, getAllCoupons)
 router.get('/:id', auth, admin, getCoupon)
 
 router.post('/create', auth, admin, createCoupon)
 router.delete('/:id', auth, admin, deleteCoupon)
 router.patch('/:id', auth, admin, updateCoupon)
+
+router.post('/search', getCouponByName)
 
 export default router

@@ -74,3 +74,15 @@ export const updateCoupon = async (req, res) => {
     res.status(404).json({ message: 'Something went wrong' })
   }
 }
+
+export const getCouponByName = async (req, res) => {
+  const { name } = req.body
+
+  const coupon = await CouponModal.findOne({ name: name })
+  if (!coupon) {
+    res.status(404).json({ message: 'Coupon not found' })
+  }
+  if (coupon) {
+    res.status(200).json(coupon)
+  }
+}
