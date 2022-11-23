@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import CommentModal from '../models/comment.js'
 import CommentReplyModal from '../models/commentreply.js'
 
@@ -25,6 +26,22 @@ export const createComment = async (req, res) => {
     select: ['name'],
   })
   res.status(201).json(comment)
+}
+
+export const deleteComment = async (req, res) => {
+  const { id } = req.params
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(404)
+        .json({ message: `No comment exist with id: ${id}` })
+    }
+    await CommentModal.findByIdAndRemove(id)
+    await CommentReplyModal.deleteMany({ comment: id })
+    res.json({ message: 'Comment deleted successfully' })
+  } catch (error) {
+    res.status(404).json({ message: 'Something went wrong' })
+  }
 }
 
 export const updateComment = async (req, res) => {
