@@ -69,6 +69,11 @@ export const reply = async (req, res) => {
     comment: req.params.commentId,
     replyComment: comment._id,
   }
+
+  const rootComment = await CommentModal.findById(req.params.commentId)
+  rootComment.childrenCount++
+  await CommentModal.findByIdAndUpdate(req.params.commentId, rootComment)
+
   let commentReply = await CommentReplyModal.create(commentReplyBody)
   commentReply = await CommentReplyModal.populate(commentReply, {
     path: 'replyComment',

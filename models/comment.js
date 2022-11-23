@@ -15,6 +15,11 @@ const commentSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    childrenCount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   {
     timestamps: true,
