@@ -6,6 +6,10 @@ const commentSchema = mongoose.Schema(
       type: String,
       required: [true, 'Text is required'],
     },
+    rating: {
+      type: Number,
+      required: true,
+    },
     commentedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

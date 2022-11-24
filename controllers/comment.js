@@ -51,7 +51,7 @@ export const updateComment = async (req, res) => {
   }
   let updatedComment = await CommentModal.findByIdAndUpdate(
     { _id: req.params.id },
-    { text: req.body.text },
+    { text: req.body.text, rating: req.body.rating },
     { new: true }
   )
   updatedComment = await CommentModal.populate(updatedComment, {
