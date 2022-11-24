@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
 import CommentModal from '../models/comment.js'
-import CommentReplyModal from '../models/commentreply.js'
 
 export const getAll = async (req, res) => {
   const { id } = req.params
-  const comments = await CommentModal.find({ isRoot: true, postId: id })
+  const comments = await CommentModal.find({ postId: id })
     .populate({
       path: 'commentedBy',
       select: ['name'],
@@ -17,7 +16,6 @@ export const createComment = async (req, res) => {
   const { id } = req.params
   const userId = req.userId
   req.body.commentedBy = userId
-  req.body.isRoot = true
   req.body.postId = id
   let comment = await CommentModal.create(req.body)
 
@@ -36,8 +34,8 @@ export const deleteComment = async (req, res) => {
         .status(404)
         .json({ message: `No comment exist with id: ${id}` })
     }
+
     await CommentModal.findByIdAndRemove(id)
-    await CommentReplyModal.deleteMany({ comment: id })
     res.json({ message: 'Comment deleted successfully' })
   } catch (error) {
     res.status(404).json({ message: 'Something went wrong' })
@@ -45,14 +43,14 @@ export const deleteComment = async (req, res) => {
 }
 
 export const updateComment = async (req, res) => {
-  const comment = await CommentModal.findById(req.params.commentId)
+  const comment = await CommentModal.findById(req.params.id)
   if (comment.commentedBy.toString() !== req.userId) {
     return res
       .status(400)
       .json('Comment can only be updated by the user who created it')
   }
   let updatedComment = await CommentModal.findByIdAndUpdate(
-    { _id: req.params.commentId },
+    { _id: req.params.id },
     { text: req.body.text },
     { new: true }
   )
@@ -61,43 +59,4 @@ export const updateComment = async (req, res) => {
     select: ['name'],
   })
   res.json(updatedComment)
-}
-
-export const getAllReply = async (req, res) => {
-  const commentId = req.params.commentId
-  const replies = await CommentReplyModal.find({ comment: commentId }).populate(
-    {
-      path: 'replyComment',
-      populate: {
-        path: 'commentedBy',
-        select: ['name'],
-      },
-    }
-  )
-  res.json(replies)
-}
-
-export const reply = async (req, res) => {
-  const userId = req.userId
-  req.body.commentedBy = userId
-
-  const comment = await CommentModal.create(req.body)
-  const commentReplyBody = {
-    comment: req.params.commentId,
-    replyComment: comment._id,
-  }
-
-  const rootComment = await CommentModal.findById(req.params.commentId)
-  rootComment.childrenCount++
-  await CommentModal.findByIdAndUpdate(req.params.commentId, rootComment)
-
-  let commentReply = await CommentReplyModal.create(commentReplyBody)
-  commentReply = await CommentReplyModal.populate(commentReply, {
-    path: 'replyComment',
-    populate: {
-      path: 'commentedBy',
-      select: ['name'],
-    },
-  })
-  res.status(201).json(commentReply)
 }

@@ -11,15 +11,6 @@ const commentSchema = mongoose.Schema(
       ref: 'User',
     },
     postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
-    isRoot: {
-      type: Boolean,
-      default: false,
-    },
-    childrenCount: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
   },
   {
     timestamps: true,
