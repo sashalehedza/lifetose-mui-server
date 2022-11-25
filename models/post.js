@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { commentSchema } from './comment.js'
 
 const postSchema = mongoose.Schema({
   title: String,
@@ -19,6 +20,23 @@ const postSchema = mongoose.Schema({
   discount: Number,
   saleCount: Number,
   saleDiscount: Number,
+  //reviews: { type: [commentSchema], default: [] },
+  reviews: [],
+  rating: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  numReviews: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  price: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
 })
 
 const PostModal = mongoose.model('Post', postSchema)

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import CommentModal from '../models/comment.js'
 import PostModal from '../models/post.js'
 
 export const getPosts = async (req, res) => {
@@ -146,5 +147,71 @@ export const likePost = async (req, res) => {
     res.status(200).json(updatedPost)
   } catch (error) {
     res.status(404).json({ message: error.message })
+  }
+}
+
+export const createPostReview = async (req, res) => {
+  const { rating, text } = req.body
+
+  const post = await PostModal.findById(req.params.id)
+
+  if (post) {
+    // const alreadyReviewed = post.reviews.find(
+    //   (r) => r.user.toString() === req.user._id.toString()
+    // )
+
+    // if (alreadyReviewed) {
+    //   res.status(400)
+    //   throw new Error('Product already reviewed')
+    // }
+
+    let review = CommentModal({
+      text,
+      rating: Number(rating),
+      name: req.user.name,
+      user: req.user._id,
+    })
+
+    post.reviews.push(review)
+
+    post.numReviews = post.reviews.length
+
+    post.rating =
+      post.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      post.reviews.length
+
+    await post.save()
+    res.json(post)
+  } else {
+    res.status(404)
+    throw new Error('Product not found')
+  }
+}
+
+export const deletePostReview = async (req, res) => {
+  const post = await PostModal.findById(req.params.id)
+
+  if (post) {
+    post.reviews = post.reviews.filter(
+      (review) => String(review._id) !== String(req.params.reviewId)
+    )
+
+    post.numReviews = post.reviews.length
+
+    post.rating =
+      post.reviews.length !== 0
+        ? post.reviews.reduce((acc, item) => item.rating + acc, 0) /
+          post.reviews.length
+        : 0
+
+    // post.reviews = []
+    // post.numReviews = 0
+    // post.rating = 0
+
+    await post.save()
+    res.json(post)
+  } else {
+    res.status(404)
+    throw new Error('Error')
   }
 }

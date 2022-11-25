@@ -13,6 +13,8 @@ import {
   getPostsByTag,
   getRelatedPosts,
   likePost,
+  createPostReview,
+  deletePostReview,
 } from '../controllers/post.js'
 
 router.get('/', getPosts)
@@ -29,5 +31,8 @@ router.get('/tag/:tag', getPostsByTag)
 router.post('/relatedPosts', getRelatedPosts)
 
 router.patch('/like/:id', auth, likePost)
+
+router.post('/:id/reviews', auth, createPostReview)
+router.post('/:id/:reviewId/reviews', auth, deletePostReview)
 
 export default router

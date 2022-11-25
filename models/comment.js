@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const commentSchema = mongoose.Schema(
+export const commentSchema = mongoose.Schema(
   {
     text: {
       type: String,
@@ -10,11 +10,15 @@ const commentSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    commentedBy: {
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+    },
+    user: {
       type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: 'User',
     },
-    postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
   },
   {
     timestamps: true,
