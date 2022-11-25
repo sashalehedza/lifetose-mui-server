@@ -6,7 +6,6 @@ import morgan from 'morgan'
 
 import userRouter from './routes/user.js'
 import postRouter from './routes/post.js'
-import commentRouter from './routes/comment.js'
 import orderRouter from './routes/order.js'
 import couponRouter from './routes/coupon.js'
 
@@ -23,7 +22,6 @@ app.use(bodyParser.json())
 
 app.use('/users', userRouter)
 app.use('/post', postRouter)
-app.use('/comments', commentRouter)
 app.use('/orders', orderRouter)
 app.use('/coupons', couponRouter)
 
