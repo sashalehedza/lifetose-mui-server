@@ -15,6 +15,7 @@ import {
   likePost,
   createPostReview,
   deletePostReview,
+  updatePostReview,
 } from '../controllers/post.js'
 
 router.get('/', getPosts)
@@ -32,7 +33,8 @@ router.post('/relatedPosts', getRelatedPosts)
 
 router.patch('/like/:id', auth, likePost)
 
-router.post('/:id/reviews', auth, createPostReview)
-router.post('/:id/:reviewId/reviews', auth, deletePostReview)
+router.post('/:id/reviews/create', auth, createPostReview)
+router.post('/:id/reviews/delete/:reviewId', auth, deletePostReview)
+router.post('/:id/reviews/update/:reviewId', auth, updatePostReview)
 
 export default router

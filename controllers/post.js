@@ -156,14 +156,14 @@ export const createPostReview = async (req, res) => {
   const post = await PostModal.findById(req.params.id)
 
   if (post) {
-    // const alreadyReviewed = post.reviews.find(
-    //   (r) => r.user.toString() === req.user._id.toString()
-    // )
+    const alreadyReviewed = post.reviews.find(
+      (r) => r.user.toString() === req.userId.toString()
+    )
 
-    // if (alreadyReviewed) {
-    //   res.status(400)
-    //   throw new Error('Product already reviewed')
-    // }
+    if (alreadyReviewed) {
+      res.status(400)
+      throw new Error('Product already reviewed')
+    }
 
     let review = CommentModal({
       text,
@@ -204,9 +204,30 @@ export const deletePostReview = async (req, res) => {
           post.reviews.length
         : 0
 
-    // post.reviews = []
-    // post.numReviews = 0
-    // post.rating = 0
+    await post.save()
+    res.json(post)
+  } else {
+    res.status(404)
+    throw new Error('Error')
+  }
+}
+
+export const updatePostReview = async (req, res) => {
+  const post = await PostModal.findById(req.params.id)
+
+  if (post) {
+    post.reviews = post.reviews.map((review) =>
+      String(review._id) === String(req.params.reviewId)
+        ? { ...review, ...req.body }
+        : review
+    )
+    post.numReviews = post.reviews.length
+
+    post.rating =
+      post.reviews.length !== 0
+        ? post.reviews.reduce((acc, item) => item.rating + acc, 0) /
+          post.reviews.length
+        : 0
 
     await post.save()
     res.json(post)
