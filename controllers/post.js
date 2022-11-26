@@ -9,7 +9,7 @@ export const getPosts = async (req, res) => {
 
     const page = parseInt(req.query.page) - 1 || 0
     const limit = parseInt(req.query.limit) || 3
-    //const search = req.query.search || ''
+    const search = req.query.search || ''
     // let sort = req.query.sort || 'rating'
 
     // let genre = req.query.genre || 'All'
@@ -44,7 +44,7 @@ export const getPosts = async (req, res) => {
     // }
 
     const posts = await PostModal.find({
-      // name: { $regex: search, $options: 'i' },
+      title: { $regex: search, $options: 'i' },
     })
       // .where('genre')
       // .in([...genre])
@@ -54,7 +54,7 @@ export const getPosts = async (req, res) => {
 
     const total = await PostModal.countDocuments({
       // genre: { $in: [...genre] },
-      // name: { $regex: search, $options: 'i' },
+      title: { $regex: search, $options: 'i' },
     })
 
     const response = {
