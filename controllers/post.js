@@ -4,27 +4,8 @@ import PostModal from '../models/post.js'
 
 export const getPosts = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) - 1 || 0
-    const limit = parseInt(req.query.limit) || 3
-    const search = req.query.search || ''
-
-    const posts = await PostModal.find({
-      title: { $regex: search, $options: 'i' },
-    })
-      .skip(page * limit)
-      .limit(limit)
-
-    const total = await PostModal.countDocuments({
-      title: { $regex: search, $options: 'i' },
-    })
-
-    const response = {
-      total,
-      page: page + 1,
-      limit,
-      posts,
-    }
-    res.status(200).json(response)
+    const posts = await PostModal.find()
+    res.status(200).json(posts)
   } catch (error) {
     res.status(404).json({ message: 'Something went wrong' })
   }

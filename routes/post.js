@@ -3,14 +3,14 @@ const router = express.Router()
 import { auth, admin } from '../middleware/auth.js'
 
 import {
+  getPostsByUser,
+  getPostsBySearch,
+  getPostsByTag,
   getPosts,
   getPost,
   createPost,
   deletePost,
   updatePost,
-  getPostsByUser,
-  getPostsBySearch,
-  getPostsByTag,
   getRelatedPosts,
   likePost,
   createPostReview,
@@ -18,16 +18,16 @@ import {
   updatePostReview,
 } from '../controllers/post.js'
 
+router.get('/userPosts/:id', auth, admin, getPostsByUser)
+router.get('/search', getPostsBySearch)
+router.get('/tag/:tag', getPostsByTag)
+
 router.get('/', getPosts)
 router.get('/:id', getPost)
 
 router.post('/', auth, admin, createPost)
 router.delete('/:id', auth, admin, deletePost)
 router.patch('/:id', auth, admin, updatePost)
-
-router.get('/userPosts/:id', auth, admin, getPostsByUser)
-router.get('/search', getPostsBySearch)
-router.get('/tag/:tag', getPostsByTag)
 
 router.post('/relatedPosts', getRelatedPosts)
 
