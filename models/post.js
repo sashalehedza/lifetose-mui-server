@@ -21,7 +21,6 @@ const postSchema = mongoose.Schema(
     discount: Number,
     saleCount: Number,
     saleDiscount: Number,
-    //reviews: { type: [commentSchema], default: [] },
     reviews: [],
     rating: {
       type: Number,

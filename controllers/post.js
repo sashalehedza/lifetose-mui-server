@@ -170,6 +170,8 @@ export const createPostReview = async (req, res) => {
       rating: Number(rating),
       name: req.user.name,
       user: req.user._id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
 
     post.reviews.push(review)
@@ -218,7 +220,7 @@ export const updatePostReview = async (req, res) => {
   if (post) {
     post.reviews = post.reviews.map((review) =>
       String(review._id) === String(req.params.reviewId)
-        ? { ...review, ...req.body }
+        ? { ...review, ...req.body, updatedAt: new Date() }
         : review
     )
     post.numReviews = post.reviews.length
