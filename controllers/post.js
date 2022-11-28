@@ -146,7 +146,7 @@ export const likePost = async (req, res) => {
 
     res.status(200).json(updatedPost)
   } catch (error) {
-    res.status(404).json({ message: error.message })
+    res.status(404).json({ message: 'Something went wrong' })
   }
 }
 
@@ -161,8 +161,7 @@ export const createPostReview = async (req, res) => {
     )
 
     if (alreadyReviewed) {
-      res.status(400)
-      throw new Error('Product already reviewed')
+      res.status(400).json({ message: 'Something went wrong' })
     }
 
     let review = CommentModal({
@@ -185,8 +184,7 @@ export const createPostReview = async (req, res) => {
     await post.save()
     res.json(post)
   } else {
-    res.status(404)
-    throw new Error('Product not found')
+    res.status(404).json({ message: 'Something went wrong' })
   }
 }
 
@@ -209,8 +207,7 @@ export const deletePostReview = async (req, res) => {
     await post.save()
     res.json(post)
   } else {
-    res.status(404)
-    throw new Error('Error')
+    res.status(404).json({ message: 'Something went wrong' })
   }
 }
 
@@ -234,7 +231,6 @@ export const updatePostReview = async (req, res) => {
     await post.save()
     res.json(post)
   } else {
-    res.status(404)
-    throw new Error('Error')
+    res.status(404).json({ message: 'Something went wrong' })
   }
 }
